@@ -3,7 +3,7 @@ const { basename, join } = require('path');
 const { createReadStream } = require('fs');
 const { exec } = require('child_process');
 const parseArgv = require('./parseArgv');
-const { isDirectory, fileExist, fileExtension, unary } = require('./utility')();
+const { isDirectory, fileExist, fileExtension, unary } = require('./utility');
 
 const onListen = ({ root = '.', exceptionalFiles = [] }) => async (req, res) => {
 	console.log(req.method, req.url);
