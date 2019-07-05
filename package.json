@@ -1,17 +1,14 @@
 {
   "name": "ReallySimpleHTTPServer",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Make a simple http server to serve static files",
-  "main": "index.js",
-  "scripts": {
-  	"start": "node index"
-  },
+  "main": "cli.js",
   "author": {
     "name": "Nguyen Thang Long",
     "url": "http://github.com/thanglongnamnay"
   },
   "bin": {
-    "rsserver": "./index.js"
+    "rserver": "./cli.js"
   },
   "license": "MIT"
 }

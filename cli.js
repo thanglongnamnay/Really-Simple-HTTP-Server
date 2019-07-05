@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const http = require('http');
 const { basename, join } = require('path');
 const { createReadStream } = require('fs');
