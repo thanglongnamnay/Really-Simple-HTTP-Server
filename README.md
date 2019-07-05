@@ -1,3 +1,4 @@
+
 # Really Simple HTTP Server
 
 *Really simple HTTP server for serving static files.*
@@ -13,13 +14,13 @@ And I could not work around it.
 ### Usage
 0. You have to have Node.js (and npm) first.
 1. Install the package.
-```
-npm i git+https://github.com/thanglongnamnay/Really-Simple-HTTP-Server -g
+```bash
+$ npm i git+https://github.com/thanglongnamnay/Really-Simple-HTTP-Server -g
 ```
 2. Run 
+```bash
+$ rserver --path your-public-directory
 ```
-rserver --path your-public-directory
-```
-or just run `rserver` on your public directory.
+or just run `$ rserver` on your public directory.
 
-Run `rserver --help` to see all the commands.
+Run `$ rserver --help` to see all the commands.
