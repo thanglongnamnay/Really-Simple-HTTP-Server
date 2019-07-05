@@ -56,7 +56,7 @@ const onListen = ({ root = '.', exceptionalFiles = [] }) => async (req, res) => 
 const option = parseArgv(['--help', '--port', '--path', '--exception'], true)(process.argv);
 
 if (option['--help'] != undefined) {
-	createReadStream('./help.txt').pipe(process.stdout);
+	createReadStream(join(__dirname, 'help.txt')).pipe(process.stdout);
 } else {
 	const port = parseInt(option['--port']) || 3000;
 	const root = option['--path'] || '.';
