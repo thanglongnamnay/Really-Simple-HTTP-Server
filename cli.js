@@ -58,10 +58,9 @@ const option = parseArgv(['--help', '--port', '--path', '--exception'], true)(pr
 if (option['--help'] != undefined) {
 	createReadStream('./help.txt').pipe(process.stdout);
 } else {
-
 	const port = parseInt(option['--port']) || 3000;
 	const root = option['--path'] || '.';
-	const exceptionalFiles = (option['--exception'] || '').split(' ').map(unary(RegExp));
+	const exceptionalFiles = option['--exception'] ? option['--exception'].split(' ').map(unary(RegExp)) : [];
 
 	http.createServer(onListen({ root, exceptionalFiles }))
 		.listen(port, err => {
@@ -69,4 +68,4 @@ if (option['--help'] != undefined) {
 			exec('start http://localhost:' + port);
 			console.log('Server is listening on ' + port);
 		});
-	}
+}
