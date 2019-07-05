@@ -1,11 +1,16 @@
 {
-  "name": "ReallySimpleHTTPServer",
+  "name": "really-simple-http-server",
   "version": "1.0.0",
   "description": "Make a simple http server to serve static files",
   "main": "cli.js",
   "author": {
     "name": "Nguyen Thang Long",
+    "email": "thanglongnamnay@gmail.com",
     "url": "http://github.com/thanglongnamnay"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/thanglongnamnay/Really-Simple-HTTP-Server.git"
   },
   "bin": {
     "rserver": "./cli.js"
