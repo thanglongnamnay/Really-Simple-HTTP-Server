@@ -1,0 +1,21 @@
+  Usage: rsserver [options] [args]
+
+  Options:
+
+  --port port ........... the server port, default: 8080.
+  --path path ........... the path to root url, default: current directory.
+  --exception regex ..... files that will not be serve (respond with 404 code.)
+  --help ................ display help.
+
+  Note: 
+    - Right now, args should not be inside any kind of quote.
+    - path argument can have spaces, and will be treat as a single path.
+    - port has to be a number.
+
+  Examples:
+
+  $ rsserver
+  $ rsserver --path ./public
+
+  # not serve service worker in localhost
+  $ rsserver --port 3000 --exception sw*.js 
