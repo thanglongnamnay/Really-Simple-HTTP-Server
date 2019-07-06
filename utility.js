@@ -21,6 +21,7 @@ const fileExtension = source => lastItem(basename(source).split('.'));
 const unary = fn => arg => fn(arg);
 
 module.exports = Object.freeze({
+	lastItem,
 	isDirectory,
 	fileExist,
 	fileExtension,

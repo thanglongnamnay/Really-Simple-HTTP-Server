@@ -4,7 +4,13 @@ const { basename, join } = require('path');
 const { createReadStream } = require('fs');
 const { exec } = require('child_process');
 const parseArgv = require('./parseArgv');
-const { isDirectory, fileExist, fileExtension, unary } = require('./utility');
+const { lastItem, isDirectory, fileExist, fileExtension, unary } = require('./utility');
+
+const notFound = res => {
+	res.statusCode = 404;
+		
+	return res.end();
+}
 
 const onListen = ({ root = '.', exceptionalFiles = [] }) => async (req, res) => {
 	console.log(req.method, req.url);
@@ -14,53 +20,59 @@ const onListen = ({ root = '.', exceptionalFiles = [] }) => async (req, res) => 
 
 	// Get the source to the file to serve.
 	let source = join(root, ...req.url.split('?')[0].split('/'));
-	if (await fileExist(source)) {
-		// isDirectory could throw error, 
-		// but we checked for file existence with fileExist.
-		// So it's really hard to throw an error here.
-		// A try catch is almost redundant here.
-		if (await isDirectory(source)) {
-			if (req.url[req.url.length - 1] !== '/') {
-				// Folder url should end with a slash
-				res.writeHead(301, { "Location": req.url + '/' });
-				
-				return res.end();
-			}
+	if (!await fileExist(source)) {
+		return notFound(res);
+	}
 
-			// Point source to index.html if request url is a folder.
-			source = join(source, 'index.html');
-			res.writeHeader(200, {"Content-Type": "text/html"}); 
-		}
-
-		// Respond a not found when request an exceptional file.
-		if (exceptionalFiles.some(e => e.test(basename(source)))) {
-			res.statusCode = 404;
+	// isDirectory could throw error, 
+	// but we checked for file existence with fileExist.
+	// So it's really hard to throw an error here.
+	// A try catch is almost redundant here.
+	if (await isDirectory(source)) {
+		if (lastItem(req.url) !== '/') {
+			// redirect to url which end with a slash
+			res.writeHead(301, { "Location": req.url + '/' });
 			
 			return res.end();
 		}
 
-		// js file request should be responded with correct mime type.
-		// TODO: Handle mime type.
-		if (fileExtension(source) === 'js') {
-			res.writeHeader(200, {"Content-Type": "text/javascript"}); 
+		// Point source to index.html if request url is a folder.
+		// You can introduce a new variable for clarity.
+		source = join(source, 'index.html');
+		if (!await fileExist(source)) {
+			return notFound(res);
 		}
 
-		createReadStream(source).pipe(res);
-	} else {
-		res.statusCode = 404;
-
-		return res.end();
+		res.writeHead(200, {"Content-Type": "text/html"}); 
 	}
+
+	// Respond a not found when request an exceptional file.
+	if (exceptionalFiles.some(e => e.test(basename(source)))) {
+		return notFound(res);
+	}
+
+	// js file request should be responded with correct mime type.
+	// TODO: Handle other mime types.
+	if (fileExtension(source) === 'js') {
+		res.writeHead(200, {"Content-Type": "text/javascript"}); 
+	}
+	createReadStream(source).pipe(res);
 }
 
-const option = parseArgv(['--help', '--port', '--path', '--exception'], true)(process.argv);
+let options;
+try {
+	options = parseArgv(['--help', '--port', '--path', '--exception'], true)(process.argv);
+} catch (e) {
+	console.error(e.message);
+	process.exit(1);
+}
 
-if (option['--help'] != undefined) {
+if (options['--help'] != undefined) {
 	createReadStream(join(__dirname, 'help.txt')).pipe(process.stdout);
 } else {
-	const port = parseInt(option['--port']) || 3000;
-	const root = option['--path'] || '.';
-	const exceptionalFiles = option['--exception'] ? option['--exception'].split(' ').map(unary(RegExp)) : [];
+	const port = parseInt(options['--port']) || 3000;
+	const root = options['--path'] || '.';
+	const exceptionalFiles = options['--exception'] ? options['--exception'].split(' ').map(unary(RegExp)) : [];
 
 	http.createServer(onListen({ root, exceptionalFiles }))
 		.listen(port, err => {
