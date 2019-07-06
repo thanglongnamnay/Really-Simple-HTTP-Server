@@ -15,7 +15,7 @@ And I could not work around it.
 0. You have to have Node.js (and npm) first.
 1. Install the package.
 ```bash
-$ npm i git+https://github.com/thanglongnamnay/Really-Simple-HTTP-Server -g
+$ npm i really-simple-http-server -g
 ```
 2. Run 
 ```bash
