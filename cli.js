@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 const http = require('http');
-const { basename, join } = require('path');
+const { basename, extname, join } = require('path');
 const { createReadStream } = require('fs');
 const { exec } = require('child_process');
 const parseArgv = require('./parseArgv');
-const { lastItem, isDirectory, fileExist, fileExtension, unary } = require('./utility');
+const { lastItem, isDirectory, fileExist, unary } = require('./utility');
 
 const notFound = res => {
 	res.statusCode = 404;
@@ -53,7 +53,7 @@ const onListen = ({ root = '.', exceptionalFiles = [] }) => async (req, res) => 
 
 	// js file request should be responded with correct mime type.
 	// TODO: Handle other mime types.
-	if (fileExtension(source) === 'js') {
+	if (extname(source) === '.js') {
 		res.writeHead(200, {"Content-Type": "text/javascript"}); 
 	}
 	createReadStream(source).pipe(res);

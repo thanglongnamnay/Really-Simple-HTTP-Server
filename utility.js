@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { basename } = require('path');
 
 const lastItem = array => array[array.length - 1];
 
@@ -16,15 +15,12 @@ const fileExist = source => new Promise(res => {
 	});
 });
 
-const fileExtension = source => lastItem(basename(source).split('.'));
-
 const unary = fn => arg => fn(arg);
 
 module.exports = Object.freeze({
 	lastItem,
 	isDirectory,
 	fileExist,
-	fileExtension,
 	unary,
 });
 
