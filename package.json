@@ -2,7 +2,7 @@
   "name": "really-simple-http-server",
   "version": "1.1.0",
   "description": "Make a simple http server to serve static files",
-  "main": "cli.js",
+  "main": "really-simple-http-server/index.js",
   "author": {
     "name": "Nguyen Thang Long",
     "email": "thanglongnamnay@gmail.com",
