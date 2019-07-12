@@ -4,6 +4,7 @@ const { basename, extname, join } = require('path');
 const { createReadStream } = require('fs');
 const { exec } = require('child_process');
 const { lastItem, isDirectory, fileExist, unary } = require('../utility');
+const mimeTypes = require('./mime-types.json');
 
 const notFound = res => {
 	res.statusCode = 404;
@@ -31,7 +32,7 @@ const onListen = ({ root = '.', exceptionalFiles = [] }) => async (req, res) => 
 	if (await isDirectory(source)) {
 		if (lastItem(req.url) !== '/') {
 			// redirect to url which ends with a slash.
-			res.writeHead(301, { "Location": req.url + '/' });
+			res.writeHead(301, { 'Location': req.url + '/' });
 			
 			return res.end();
 		}
@@ -43,20 +44,14 @@ const onListen = ({ root = '.', exceptionalFiles = [] }) => async (req, res) => 
 		if (!await fileExist(source)) {
 			return notFound(res);
 		}
-
-		res.writeHead(200, {"Content-Type": "text/html"}); 
 	}
 
 	// Respond a not found when request an exceptional file.
 	if (exceptionalFiles.some(e => e.test(basename(source)))) {
 		return notFound(res);
 	}
-
-	// js file request should be responded with correct mime type.
-	// TODO: Handle other mime types.
-	if (extname(source) === '.js') {
-		res.writeHead(200, {"Content-Type": "text/javascript"}); 
-	}
+	
+	res.writeHead(200, { 'Content-Type': mimeTypes[extname(source)] || 'application/octet-stream' }); 
 	createReadStream(source).pipe(res);
 }
 const showHelp = (callback = () => {}) => {
