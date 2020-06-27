@@ -20,7 +20,7 @@ const onListen = ({ root = '.', exceptionalFiles = [] }) => async (req, res) => 
 
 	// Get the source to the file to serve.
 	// Should I use url.parse?
-	let source = join(root, ...req.url.split('?')[0].split('/'));
+	let source = decodeURI(join(root, ...req.url.split('?')[0].split('/')));
 	if (!await fileExist(source)) {
 		return notFound(res);
 	}
